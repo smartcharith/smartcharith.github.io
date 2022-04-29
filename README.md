@@ -1,1 +1,0 @@
-# smartcharith.github.io
