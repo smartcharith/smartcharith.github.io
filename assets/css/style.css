@@ -426,11 +426,13 @@ html, body {
 ================================================== */
 .hero {
   background: url(../img/hero.jpg) center no-repeat;
-  height: 100%;
+  height: 100vh; /* Full viewport height */
   width: 100%;
-  display: table;
+  display: flex; /* Use flexbox for centering content */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
   position: relative;
-  background-size: cover;
+  background-size: cover; /* Ensure the image covers the entire section */
 }
 
 .background-overlay:before {
@@ -442,6 +444,7 @@ html, body {
   top: 0;
   left: 0;
   z-index: 0;
+  box-sizing: border-box; /* Ensures padding/border are included */
 }
 
 .hero-content {
