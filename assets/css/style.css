@@ -2383,7 +2383,7 @@ textarea.form-control {
 
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* Aspect ratio (16:9) */
+  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
   height: 0;
   overflow: hidden;
   margin-bottom: 20px; /* Space between videos */
@@ -2397,11 +2397,6 @@ textarea.form-control {
   height: 100%;
   border: none;
 }
-/* Optional: Add spacing between videos */
-.row .video-container {
-  margin-bottom: 15px;
-}
-
 @media only screen and (max-width: 767px) {
   /* MODALS */
   .modal-dialog {
