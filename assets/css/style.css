@@ -2381,13 +2381,13 @@ textarea.form-control {
   border-width: 1px 0 0 0;
 }
 
+/* Ensures videos are responsive and maintain 16:9 aspect ratio */
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
-  margin-bottom: 20px; /* Space between videos */
-  padding-right: 15px; /* Space between videos horizontally */
+  margin-bottom: 15px; /* Space below the video */
 }
 
 .video-container iframe {
@@ -2398,10 +2398,27 @@ textarea.form-control {
   height: 100%;
   border: none;
 }
-.row {
-  margin-left: 0; /* Remove potential negative margins */
-  margin-right: 0;
+
+/* Wrapper for individual video */
+.video-container-wrapper {
+  text-align: center; /* Center-align video titles */
+  padding: 15px; /* Space around each video */
 }
+
+/* Video Titles */
+.video-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px; /* Space above the title */
+}
+
+/* Reduce overall grid size */
+.row {
+  justify-content: center; /* Center the grid content */
+  gap: 20px; /* Space between videos */
+}
+
 @media only screen and (max-width: 767px) {
   /* MODALS */
   .modal-dialog {
@@ -2413,4 +2430,11 @@ textarea.form-control {
     height: 36px;
     width: 36px;
   }
+  .video-container-wrapper {
+    padding: 10px; /* Reduce padding for smaller screens */
+}
+
+.video-title {
+    font-size: 14px;
+}
 }
