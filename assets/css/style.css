@@ -2386,6 +2386,7 @@ textarea.form-control {
   padding-bottom: 56.25%; /* Aspect ratio (16:9) */
   height: 0;
   overflow: hidden;
+  margin-bottom: 20px; /* Add space below each video */
  
 }
 
