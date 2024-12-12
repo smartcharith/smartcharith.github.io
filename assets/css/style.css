@@ -2383,6 +2383,7 @@ textarea.form-control {
 
 .video-container {
   position: relative;
+  width: 100%; /* Ensures the container takes up full width of its parent */
   padding-bottom: 56.25%; /* Aspect ratio (16:9) */
   height: 0;
   overflow: hidden;
