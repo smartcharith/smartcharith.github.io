@@ -2387,6 +2387,7 @@ textarea.form-control {
   height: 0;
   overflow: hidden;
   margin-bottom: 20px; /* Space between videos */
+  padding-right: 15px; /* Space between videos horizontally */
 }
 
 .video-container iframe {
@@ -2396,6 +2397,10 @@ textarea.form-control {
   width: 100%;
   height: 100%;
   border: none;
+}
+.row {
+  margin-left: 0; /* Remove potential negative margins */
+  margin-right: 0;
 }
 @media only screen and (max-width: 767px) {
   /* MODALS */
