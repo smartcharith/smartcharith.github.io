@@ -2386,7 +2386,7 @@ textarea.form-control {
   padding-bottom: 56.25%; /* Aspect ratio (16:9) */
   height: 0;
   overflow: hidden;
-  width: 100%; /* Ensures the container takes up full width of its parent */
+  margin-bottom: 20px; /* Space between videos */
 }
 
 .video-container iframe {
@@ -2400,9 +2400,6 @@ textarea.form-control {
 /* Optional: Add spacing between videos */
 .row .video-container {
   margin-bottom: 15px;
-}
-.row .col-md-6 {
-  margin-bottom: 20px; /* Space below each row */
 }
 
 @media only screen and (max-width: 767px) {
