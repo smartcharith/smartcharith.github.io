@@ -496,8 +496,8 @@ html, body {
 }
 
 .hero-arrow a {
-  font-size: 50px;
-  color: #ff0000;
+  font-size: 100px;
+  color: #ffffff;
 }
 
 @-webkit-keyframes home-arrow-down {
