@@ -496,7 +496,7 @@ html, body {
 }
 
 .hero-arrow a {
-  font-size: 100px;
+  font-size: 200px;
   color: #ffffff;
 }
 
@@ -567,9 +567,9 @@ html, body {
 }
 
 .home-arrow-down {
-  -moz-animation: home-arrow-down 2s infinite;
-  -webkit-animation: home-arrow-down 2s infinite;
-  animation: home-arrow-down 2s infinite;
+  -moz-animation: home-arrow-down 1s infinite;
+  -webkit-animation: home-arrow-down 1s infinite;
+  animation: home-arrow-down 1s infinite;
   -webkit-animation-play-state: running;
   animation-play-state: running;
 }
