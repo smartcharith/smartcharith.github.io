@@ -225,43 +225,31 @@ html, body {
 
 
 
-/* Carousel Container */
-.carousel {
-  position: relative;
-  display: flex;
-  overflow: hidden;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+/* homepage video carousel*/
+.carousel .inner-content.vid-inner-content { height: 405px; width: 720px; display: inline-block; }
+.carousel .carousel-indicators { bottom: 0px; }
+.carousel .carousel-indicators li { margin: 0 2px; width: 18px; height: 18px; background: transparent; border-color: #0056b8; border-width: 3px; }
+.carousel .carousel-indicators li.active { background: rgba(0, 86, 184, 1); }
+.carousel#video-carousel { padding-bottom: 90px; }
+.carousel#video-carousel .carousel-inner { border: 2px solid #fff; background-color: #fff; }
+.carousel#video-carousel .carousel-inner .inner-content.vid-inner-content .youtube-video { position: inherit; left: 0; top: 0; }
+.carousel#video-carousel .carousel-control { color: rgba(0, 86, 184, 1); width: 5%; line-height: 400px; background: none; } 
+.carousel#video-carousel .carousel-control:hover, .carousel#video-carousel .carousel-control:focus, .carousel#video-carousel .carousel-control:active { color: rgba(0, 86, 184, 1); }
+.carousel-control { width: 5%; }
+.carousel .carousel-control { background: transparent; text-shadow: none; color: rgba(0, 86, 184, 1); opacity: 1; }
+@media (max-width: 768px){
+.carousel .inner-content.vid-inner-content { height: 293px; width: 520px; display: inline-block; }
+.carousel-control { width: 5%; }
 }
-
-/* Carousel Items */
-.carousel-item {
-  flex: 0 0 100%;
-  transition: transform 1s ease-in-out;
-  display: none;
+@media (max-width: 414px){
+.carousel .inner-content.vid-inner-content { height: 100%; width: 320px; display: inline-block; }
+.vid-carousel-control { display: none; }
+.carousel .carousel-indicators { bottom: 40px; }
 }
-
-.carousel-item.active {
-  display: block;
-}
-
-/* Navigation Buttons */
-.carousel-navigation {
-  position: relative;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.carousel-navigation .prev,
-.carousel-navigation .next {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 50%;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-size: 18px;
-  margin: 0 5px;
+@media (max-width: 360px){
+.carousel .inner-content.vid-inner-content { height: 100%; width: 266px; display: inline-block; }
+.vid-carousel-control { display: none; }
+.carousel .carousel-indicators { bottom: 40px; }
 }
 
 
