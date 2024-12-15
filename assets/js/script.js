@@ -1,350 +1,280 @@
-$(function () {    
+$(function () {
+    // Setup your carousels
+    $('#video-carousel').carousel({ interval: false }); // Disable auto-slide
 
+    /*
+     * Load YouTube Iframe API for the video carousel
+     */
+    var tag = document.createElement('script');
+    tag.src = "//www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-// setup your carousels as you normally would using JS
-// or via data attributes according to the documentation
-// https://getbootstrap.com/javascript/#carousel
-$('#video-carousel').carousel({ interval: false }); //Disable auto-slide
-}());
+    var videoArray = [];
 
-/*
-* Video carousel - Dynamically load in YouTube videos based on 'data-id'
-*/
-//Load the YouTube Iframe API
-var tag = document.createElement('script');
+    function onYouTubePlayerAPIReady() {
+        // Look for video 'data-id' in the '.youtube-video' div
+        var videos = document.querySelectorAll('#video-carousel .youtube-video');
+        videos.forEach((video, index) => {
+            const dataset = video.dataset.id;
+            const cclang = video.dataset.lang;
+            const ccpolicy = video.dataset.cc;
+            const divID = `vid-${index}`;
 
-tag.src = "//www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            // Setup YouTube Player
+            videoArray[index] = new YT.Player(divID, {
+                height: '100%',
+                width: '100%',
+                playerVars: {
+                    autoplay: 0,
+                    controls: 1,
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    loop: 1,
+                    iv_load_policy: 3,
+                    cc_lang_pref: cclang,
+                    cc_load_policy: ccpolicy,
+                },
+                videoId: dataset,
+                events: {
+                    onReady: onPlayerReady,
+                    onStateChange: onPlayerStateChange,
+                },
+            });
+        });
+    }
 
+    function onPlayerReady(event) {
+        // Pause all videos on carousel slide change
+        $('#video-carousel').on('slide.bs.carousel', function () {
+            $('#video-carousel iframe').each(() => {
+                event.target.pauseVideo();
+            });
+        });
+    }
 
-//This will be the object name for interacting with the videos in the rest of this code
-var videoArray = new Array();
+    function onPlayerStateChange(event) {
+        // Manage Play/Pause buttons
+        $("#video-carousel .play-button-wrapper .btn-video").each(function () {
+            const $button = $(this);
 
-//Function: onYouTubePlayerAPIReady - Run when API is ready
-function onYouTubePlayerAPIReady() {
-
-//Look for video 'data-id' in the '.youtube-video' div
-var videos = document.querySelectorAll('#video-carousel .youtube-video');
-
-
-//Loop through each div found
-for (var i = 0; i < videos.length; i++) {
-
-//Create an array to hold the video IDs from 'data-id'
-dataset = videos[i].dataset.id;
-cclang = videos[i].dataset.lang;
-ccpolicy = videos[i].dataset.cc;
-	
-//This will be the variable name for inserting videos into the HTML divs
-var divID = 'vid-' + i.toString();
-
-//Setup video object, configure how videos should be presented
-videoArray[i] = new YT.Player(divID, {
-height: '100%',
-width: '100%',
-playerVars: {
-'autoplay': 0,
-'controls': 1,
-'modestbranding': 1,
-'rel': 0,
-'showinfo': 0,
-'loop': 1,
-'iv_load_policy': 3,
-'cc_lang_pref': cclang,
-'cc_load_policy': ccpolicy
-},
-videoId: dataset, //Uses current looped ID from array
-events: {
-'onReady': onPlayerReady,
-'onStateChange': onPlayerStateChange
-}
-});
-
-}
-}
-
-//Function: onPlayerReady - Run when video player is ready
-function onPlayerReady(event) {
-
-//When the Bootstrap Carousel moves
-$('#video-carousel').on('slide.bs.carousel', function () {
-
-//Find each Iframe within '#video-carousel'
-$(this).find('iframe').each(function(){
-
-//Pause all YouTube videos
-event.target.pauseVideo();
-
-});
-
-
-//Show custom video button
-//$('.play-button-wrapper .btn-video').show();
-
-});
-
-
-}
-
-//Function: onPlayerStateChange - Run when a videos state has changed
-function onPlayerStateChange(event) {
-
-//Find all custom video buttons within '#video-carousel'
-$("#video-carousel").find('.play-button-wrapper .btn-video').each(function(){
-
-//If video has Ended
-if (event.data == YT.PlayerState.ENDED) {
-$(this).fadeIn("Slow");//Fade out
-$(this).find('i').attr("class", "fa fa-play");
-}
-
-//If video is Playing
-if (event.data == YT.PlayerState.PLAYING) {
-$(this).find('i').attr("class", "fa fa-pause");//Change icon
-$(this).fadeOut("Slow");//Fade out
-}
-
-//If video is Paused
-if (event.data == YT.PlayerState.PAUSED) {
-$(this).fadeIn("Slow");//Fade out
-$(this).find('i').attr("class", "fa fa-play");
-}
-
-//If video is Buffering
-if (event.data == YT.PlayerState.BUFFERING) {
-$(this).find('i').attr("class", "fa fa-circle-o-notch fa-spin fa-fw");
-}
-
-});
-}
-
-//Bind Click and Touchstart events to the custom video button
-$( ".play-button-wrapper" ).bind("click touchstart", function() {
-
-//Find the active carousel slide and target the Iframe within it
-$("#video-carousel").find('.active iframe').each(function(){
-
-//Find the integer from the div ID and split - Use objectID[1] to output the integer
-var objectID = $(this).attr('id').split('-');
-
-
-//If the active slide's video is Playing
-if (videoArray[ objectID[1] ].getPlayerState() == 1) {
-videoArray[ objectID[1] ].pauseVideo(); //Pause video on click
-
-//If the active slide's video is Paused
-} else if (videoArray[ objectID[1] ].getPlayerState() == 2) {
-videoArray[ objectID[1] ].playVideo(); //Play video on click
-
-//If the video is doing anything else
-} else {
-videoArray[ objectID[1] ].playVideo(); //Play video on click
-}
-
-});
-
-
-
-
-
-// Navigation 
-    $('.site-navigation').affix({
-      offset: {
-        top: $('.hero').height()
+            if (event.data === YT.PlayerState.ENDED) {
+                $button.fadeIn("slow").find('i').attr("class", "fa fa-play");
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                $button.find('i').attr("class", "fa fa-pause").fadeOut("slow");
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                $button.fadeIn("slow").find('i').attr("class", "fa fa-play");
             }
+        });
+    }
+
+    // Play/Pause Button Handler
+    $(".play-button-wrapper").on("click touchstart", function () {
+        $("#video-carousel .active iframe").each(function () {
+            const objectID = $(this).attr('id').split('-')[1];
+            const playerState = videoArray[objectID].getPlayerState();
+
+            if (playerState === YT.PlayerState.PLAYING) {
+                videoArray[objectID].pauseVideo();
+            } else {
+                videoArray[objectID].playVideo();
+            }
+        });
     });
 
-    var $window = $(window);
+    /*
+     * General Navigation and Scroll Behavior
+     */
+    $('.site-navigation').affix({
+        offset: {
+            top: $('.hero').height(),
+        },
+    });
+
+    const $window = $(window);
+
     function checkWidth() {
-        var windowsize = $window.width();
+        const windowsize = $window.width();
         if (windowsize < 768) {
-            $('.nav a').on('click', function(){
-                $('.navbar-toggle').click() //bootstrap 3.x by Richard
+            $('.nav a').on('click', function () {
+                $('.navbar-toggle').click();
             });
         }
     }
-    // Execute on load
-    checkWidth();
-    // Bind event listener
-    $(window).resize(checkWidth);
 
-// Highlight the top nav as scrolling occurs
+    checkWidth();
+    $window.resize(checkWidth);
+
+    // Highlight navigation on scroll
     $('body').scrollspy({
         target: '.site-header',
-        offset: 10
+        offset: 10,
     });
 
-//jQuery for page scrolling feature - requires jQuery Easing plugin
-    $(document).on('click', '.page-scroll a', function(event) {
-        var $anchor = $(this);
-        $('html, body').stop().animate({
-            scrollTop: $($anchor.attr('href')).offset().top
-        }, 1000, 'easeInOutExpo');
+    // Smooth scrolling for page links
+    $(document).on('click', '.page-scroll a', function (event) {
+        const $anchor = $(this);
+        $('html, body').stop().animate(
+            {
+                scrollTop: $($anchor.attr('href')).offset().top,
+            },
+            1000,
+            'easeInOutExpo'
+        );
         event.preventDefault();
     });
 
-//Counters 
-    if ($(".counter-start").length>0) {
-        $(".counter-start").each(function() {
-            var stat_item = $(this),
-            offset = stat_item.offset().top;
-            $(window).scroll(function() {
-                if($(window).scrollTop() > (offset - 1000) && !(stat_item.hasClass('counting'))) {
+    /*
+     * Counters
+     */
+    if ($(".counter-start").length > 0) {
+        $(".counter-start").each(function () {
+            const stat_item = $(this);
+            const offset = stat_item.offset().top;
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > offset - 1000 && !stat_item.hasClass('counting')) {
                     stat_item.addClass('counting');
                     stat_item.countTo();
                 }
             });
         });
-    };
+    }
 
+    /*
+     * Progress Bars
+     */
+    const $section = $('.section-skills');
 
-// Progress bar 
-    var $section = $('.section-skills');
     function loadDaBars() {
         $('.progress .progress-bar').progressbar({
             transition_delay: 500,
-            display_text: 'center'
+            display_text: 'center',
         });
     }
-    
-    $(document).bind('scroll', function(ev) {
-        var scrollOffset = $(document).scrollTop();
-        var containerOffset = $section.offset().top - window.innerHeight;
+
+    $(document).on('scroll', function () {
+        const scrollOffset = $(document).scrollTop();
+        const containerOffset = $section.offset().top - window.innerHeight;
+
         if (scrollOffset > containerOffset) {
             loadDaBars();
-            // unbind event not to load scrolsl again
-            $(document).unbind('scroll');
+            $(document).off('scroll');
         }
     });
 
-//Team Carousel
+    /*
+     * Team Carousel
+     */
     $('#services-carousel').carousel({ interval: false });
 
-    // Carousel touch support
-    if($(".carousel-inner").length) {
+    // Touch support for carousel
+    if ($(".carousel-inner").length) {
         $(".carousel-inner").swipe({
-            //Generic swipe handler for all directions
-            swipeLeft: function (event, direction, distance, duration, fingerCount) {
+            swipeLeft: function () {
                 $(this).parent().carousel('next');
             },
             swipeRight: function () {
                 $(this).parent().carousel('prev');
             },
-            //Default is 75px, set to 0 for demo so any distance triggers swipe
-            threshold: 50
+            threshold: 50,
         });
     }
 
-// Slick.js   
+    /*
+     * Slick.js Carousels
+     */
     $('.review-carousel').slick({
         nextArrow: '<button class="slick rectangle slick-next"><i class="fa fa-angle-right" aria-hidden="true"></button>',
-        prevArrow: '<button class="slick rectangle slick-prev"><i class="fa fa-angle-left" aria-hidden="true"></button>'
+        prevArrow: '<button class="slick rectangle slick-prev"><i class="fa fa-angle-left" aria-hidden="true"></button>',
     });
 
     $('.clients-carousel').slick({
         arrows: false,
         slidesToShow: 5,
-        responsive: [ {
-            breakpoint : 992,
-            settings: {
-                slidesToShow: 2
-            }
-        },
-        {
-            breakpoint : 480,
-            settings: {
-                slidesToShow: 1
-            }
-      }]
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                },
+            },
+        ],
     });
 
-//shuffle.js
-    var shuffleme = (function( $ ) {
-      'use strict';
-          var $grid = $('#grid'), //locate what we want to sort 
-          $filterOptions = $('.portfolio-sorting li'),  //locate the filter categories
+    /*
+     * Shuffle.js for Portfolio Filtering
+     */
+    const shuffleme = (function ($) {
+        'use strict';
+        const $grid = $('#grid');
+        const $filterOptions = $('.portfolio-sorting li');
 
-      init = function() {
+        function init() {
+            setTimeout(function () {
+                listen();
+                setupFilters();
+            }, 100);
 
-        // None of these need to be executed synchronously
-        setTimeout(function() {
-          listen();
-          setupFilters();
-        }, 100);
+            $grid.shuffle({
+                itemSelector: '[class*="col-"]',
+                group: Shuffle.ALL_ITEMS,
+            });
+        }
 
-        // instantiate the plugin
-        $grid.shuffle({
-          itemSelector: '[class*="col-"]', 
-           group: Shuffle.ALL_ITEMS, 
-        });
-      },
+        function setupFilters() {
+            const $btns = $filterOptions.children();
 
-        
-      // Set up button clicks
-      setupFilters = function() {
-        var $btns = $filterOptions.children();
-        $btns.on('click', function(e) {
-          e.preventDefault();
-          var $this = $(this),
-              isActive = $this.hasClass( 'active' ),
-              group = isActive ? 'all' : $this.data('group');
+            $btns.on('click', function (e) {
+                e.preventDefault();
+                const $this = $(this);
+                const isActive = $this.hasClass('active');
+                const group = isActive ? 'all' : $this.data('group');
 
-          // Hide current label, show current label in title
-          if ( !isActive ) {
-            $('.portfolio-sorting li a').removeClass('active');
-          }
+                if (!isActive) {
+                    $('.portfolio-sorting li a').removeClass('active');
+                }
 
-          $this.toggleClass('active');
+                $this.toggleClass('active');
+                $grid.shuffle('shuffle', group);
+            });
+        }
 
-          // Filter elements
-          $grid.shuffle( 'shuffle', group );
-        });
+        function listen() {
+            const debouncedLayout = $.throttle(300, function () {
+                $grid.shuffle('update');
+            });
 
-        $btns = null;
-      },
+            $grid.find('img').each(function () {
+                if (this.complete && this.naturalWidth !== undefined) {
+                    return;
+                }
 
-      // Re layout shuffle when images load. This is only needed
-      // below 768 pixels because the .picture-item height is auto and therefore
-      // the height of the picture-item is dependent on the image
-      // I recommend using imagesloaded to determine when an image is loaded
-      // but that doesn't support IE7
-      listen = function() {
-        var debouncedLayout = $.throttle( 300, function() {
-          $grid.shuffle('update');
-        });
+                const proxyImage = new Image();
+                $(proxyImage).on('load', function () {
+                    $(this).off('load');
+                    debouncedLayout();
+                });
 
-        // Get all images inside shuffle
-        $grid.find('img').each(function() {
-          var proxyImage;
+                proxyImage.src = this.src;
+            });
 
-          // Image already loaded
-          if ( this.complete && this.naturalWidth !== undefined ) {
-            return;
-          }
+            setTimeout(debouncedLayout, 500);
+        }
 
-          // If none of the checks above matched, simulate loading on detached element.
-          proxyImage = new Image();
-          $( proxyImage ).on('load', function() {
-            $(this).off('load');
-            debouncedLayout();
-          });
+        return {
+            init: init,
+        };
+    })(jQuery);
 
-          proxyImage.src = this.src;
-        });
-
-        // Because this method doesn't seem to be perfect.
-        setTimeout(function() {
-          debouncedLayout();
-        }, 500);
-      };      
-
-      return {
-        init: init
-      };
-    }( jQuery ));
-
-    if($('#grid').length >0 ) { 
-      shuffleme.init(); //filter portfolio
-    };
-}());
+    if ($('#grid').length > 0) {
+        shuffleme.init();
+    }
+});
