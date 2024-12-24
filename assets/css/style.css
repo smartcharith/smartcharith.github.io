@@ -222,7 +222,10 @@ html, body {
 .review-carousel .slick.rectangle.slick-next i {
   padding-left: 3px;
 }
-
+.section-divider {
+  border: 1px solid #ddd;
+  margin: 20px 0;
+}
 
 
 /* homepage video carousel*/
