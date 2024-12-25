@@ -226,9 +226,6 @@ html, body {
   border: 1px solid #ddd;
   margin: 20px 0;
 }
-.text-left p {
-  text-align: left;
-}
 
 /* homepage video carousel*/
 .carousel .inner-content.vid-inner-content { height: 405px; width: 720px; display: inline-block; }
